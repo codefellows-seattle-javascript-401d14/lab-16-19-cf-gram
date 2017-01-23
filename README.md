@@ -10,9 +10,9 @@
   * Submit a question, observation, and how long you spent on canvas  
   
 ## Learning Objectives  
-<!-- the leaning objectives from the corisponding class number --> 
-## Resources  
-<!-- a list of liks if any are necessary for the assignment--> 
+* Students will understand the difference between Hashing and Cypher algorythems and when they are used
+* Students will be able to implament basic auth for thier apis
+
 ## Requirements  
 #### Configuration  
 <!-- list of files, configurations, tools, ect that are required -->
