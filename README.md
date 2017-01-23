@@ -10,8 +10,8 @@
   * Submit a question, observation, and how long you spent on canvas  
   
 ## Learning Objectives  
-* Students will understand the difference between Hashing and Cypher algorythems and when they are used
-* Students will be able to implament basic auth for thier apis
+* Students will understand the difference between Hashing and Cypher algorithms and when they are used
+* Students will be able to implement basic auth for their APIs
 
 ## Requirements  
 #### Configuration  
@@ -36,7 +36,7 @@ Your lab directory must include
  * The user must have a unique username and findhash
  * the user must have an email 
  * The user must never store the password as plain text (hash the password)
- * The user must have a method for genorating a token from the findHash
+ * The user must have a method for generating a token from the findHash
 * use the `body-parser` express middleware to on `POST` and `PUT` routes
 * use the npm `debug` module to log the functions being executed in your app
 * using the express `Router` create an auth router with routes for **signup**
@@ -49,19 +49,20 @@ Your lab directory must include
 ###### POST `/api/signup`
 * `POST` request
  * the client should pass the username and passord in the body of the request
- * the server should respond with a token genoratorated using jsonwebtoken and the users findHash
+ * the server should respond with a token generated using jsonwebtoken and the users findHash
  * the server should respond with a 400 Bad Request to failed request
 
 #### Testing  
 * your tests should start your server when they begin and stop your server when they finish
-* write a test to ensure that your api returns a status code of 404 for routes that have not been registered
+* write a test to ensure that your API returns a status code of 404 for routes that have not been registered
 * `/api/signup`
- * `POST` - test 400, responds with the `http-errors` 401 name, for if no `body provided` or `invalid body`
- * `POST` - test 409, when a username is allready taken
- * `POST` - test 200, response body like `<token>` for a post request with a valid body
+ * `POST` - test 400, when the request has a missing field in the body
+ * `POST` - test 401, when no token is provided
+ * `POST` - test 409, when a username is already taken
+ * `POST` - test 200, response body that has the token for a post request with a valid body
 
 ####  Documentation  
-* write api docs in your README
+* write API docs in your README
 
 <!-- a description of what you want the student to test -->
 ## Rubric  
