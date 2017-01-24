@@ -32,7 +32,7 @@ app.use(function(err, req, res, next){
     res.status(400).send();
     return;
   }
-  if(err.message === 'E11000 duplicate key') {
+  if(err.name === 'MongoError' && err.code == '11000') {
   // 409 means confit when a user is trying to do something that needs to
   // be unique and has already been taken
     res.status(409).send(); //beach boys: she's real fine my 409.
