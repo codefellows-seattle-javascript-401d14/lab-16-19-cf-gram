@@ -1,4 +1,4 @@
-401 JS --  Lab 16 API Auth // Basic and Bearer
+401 JS --  Lab 17 API Auth // Basic and Bearer
 ===
 
 ## Submission Instructions
