@@ -24,7 +24,7 @@ app.use(function(err, req, res, next) {
     return res.status(err.status).send();
   if(err.name === 'ValidationError')
     return res.status(400).send();
-  if(err.message === 'E11000 duplicate key')
+  if(err.name === 'MongoError' && err.code == '11000')
     return res.status(409).send();
   res.status(500).send();
 });

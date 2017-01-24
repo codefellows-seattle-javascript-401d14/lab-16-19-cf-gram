@@ -52,5 +52,54 @@ describe('testing auth-router', function() {
       })
       .catch(done);
     });
+
+    it('a missing field should respond with 400 status', done => {
+      superagent.post(`${baseURL}/api/signup`)
+      .send({username: 'blah'})
+      .then(done)
+      .catch(err => {
+        expect(err.status).to.equal(400);
+        done();
+      })
+      .catch(done);
+    });
+
+    it('bad endpoint should respond with 404 status', done => {
+      superagent.post(`${baseURL}/api/sign`)
+      .send({})
+      .then(done)
+      .catch(err => {
+        expect(err.status).to.equal(404);
+        done();
+      })
+      .catch(done);
+    });
+
+    describe('POST username already taken', function() {
+      before(done => {
+        superagent.post(`${baseURL}/api/signup`)
+        .send({
+          username: 'blah',
+          password: 'password',
+          email: 'myemail@email.com',
+        })
+        .then(() => done())
+        .catch(done);
+      });
+      it('should respond with 409 status', done => {
+        superagent.post(`${baseURL}/api/signup`)
+        .send({
+          username: 'blah',
+          password: 'admin',
+          email: 'alsomyemail@email.com',
+        })
+        .then(done)
+        .catch(err => {
+          expect(err.status).to.equal(409);
+          done();
+        })
+        .catch(done);
+      });
+    });
   });
 });

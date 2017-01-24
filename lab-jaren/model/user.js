@@ -18,7 +18,7 @@ userSchema.methods.generatePasswordHash = function(password) {
   debug('generatePasswordHash');
   return new Promise((resolve, reject) => {
     bcrypt.hash(password, 10, (err, hash) => {
-      if(err) return reject(err);
+      if(err) return reject(createError(400, 'no password supplied'));
       this.password = hash;
       resolve(this);
     });
@@ -30,7 +30,7 @@ userSchema.methods.comparePasswordHash = function(password) {
   return new Promise((resolve, reject) => {
     bcrypt.compare(password, this.password, (err, valid) => {
       if(err) return reject(err);
-      if(!valid) return reject(createError(401, 'passwords didnt match'));
+      if(!valid) return reject(createError(401, 'passwords didn\'t match'));
       resolve(this);
     });
   });
