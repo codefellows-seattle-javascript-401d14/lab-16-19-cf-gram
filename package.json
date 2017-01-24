@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha",
-    "debug": "DEBUG=* npm run test"
+    "debug": "DEBUG=gram* npm run test"
   },
   "repository": {
     "type": "git",
@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/devonhackley/lab-16-19-cf-gram#readme",
   "dependencies": {
+    "bcrypt": "^1.0.2",
     "bluebird": "^3.4.7",
     "body-parser": "^1.16.0",
     "cors": "^2.8.1",
@@ -29,6 +30,7 @@
     "dotenv": "^4.0.0",
     "express": "^4.14.0",
     "http-errors": "^1.5.1",
+    "jsonwebtoken": "^7.2.1",
     "mongoose": "^4.7.7",
     "morgan": "^1.7.0"
   },
