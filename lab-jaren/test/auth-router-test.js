@@ -4,32 +4,14 @@ require('./mock-env.js');
 const expect = require('chai').expect;
 const superagent = require('superagent');
 const User = require('../model/user.js');
+const userMocks = require('./lib/user-mocks.js');
+const serverControl = require('./lib/server-control.js');
 const baseURL = `http://localhost:${process.env.PORT}`;
-const server = require('../server.js');
+require('../server.js');
 
 describe('testing auth-router', function() {
-  before(done => {
-    if(!server.isRunning) {
-      server.listen(process.env.PORT, () => {
-        server.isRunning = true;
-        console.log('server up');
-        done();
-      });
-      return;
-    }
-    done();
-  });
-  after(done => {
-    if(server.isRunning) {
-      server.close(() => {
-        server.isRunning = false;
-        console.log('server down');
-        done();
-      });
-      return;
-    }
-    done();
-  });
+  before(serverControl.startServer);
+  after(serverControl.killServer);
   afterEach(done => {
     User.remove({})
     .then(() => done())
@@ -100,6 +82,32 @@ describe('testing auth-router', function() {
         })
         .catch(done);
       });
+    });
+  });
+
+  describe('testing GET /api/login', function() {
+    before(userMocks.bind(this));
+
+    it('should respond with a token', done => {
+      superagent.get(`${baseURL}/api/login`)
+      .auth(this.tempUser.username, '1234')
+      .then(res => {
+        expect(res.status).to.equal(200);
+        expect(Boolean(res.text)).to.equal(true);
+        done();
+      })
+      .catch(done);
+    });
+
+    it('no auth header provided should respond with 401', done => {
+      superagent.get(`${baseURL}/api/login`)
+      .auth('notarealuser', '1234')
+      .then(done)
+      .catch(err => {
+        expect(err.status).to.equal(401);
+        done();
+      })
+      .catch(done);
     });
   });
 });
