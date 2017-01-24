@@ -18,7 +18,7 @@ UserSchema.methods.genPwHash = function(pw){
   debug('genPwHash');
   return new Promise((resolve, reject) => {
     bcrypt.hash(pw, 11, (err, hash) => {
-      if(err) return reject(err);
+      if(err) return reject(createError(400, 'no password supplied'));
       this.pw = hash;
       resolve(this);
     });
@@ -29,7 +29,7 @@ UserSchema.methods.comparePwHash = function(pw){
   debug('comparePwHash');
   return new Promise((resolve, reject) => {
     bcrypt.compare(pw, this.pw, (err, valid) => {
-      if(err) return reject(err);
+      if(err) return reject(createError(400, 'no password supplied'));
       if(!valid) return reject(createError(401, 'passwords didn\'t match'));
       resolve(this);
     });
