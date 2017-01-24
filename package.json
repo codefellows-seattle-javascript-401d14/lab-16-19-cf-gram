@@ -1,0 +1,43 @@
+{
+  "name": "lab-16-19-cf-gram",
+  "version": "0.0.1",
+  "description": "lab-gnoevil",
+  "main": "server.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha",
+    "debug": "DEBUG=cf* npm run test",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gnoevil/lab-16-19-cf-gram.git"
+  },
+  "author": "geno.guerrero@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gnoevil/lab-16-19-cf-gram/issues"
+  },
+  "homepage": "https://github.com/gnoevil/lab-16-19-cf-gram#readme",
+  "dependencies": {
+    "bcrypt": "^1.0.2",
+    "bluebird": "^3.4.7",
+    "body-parser": "^1.16.0",
+    "cors": "^2.8.1",
+    "debug": "^2.6.0",
+    "dotenv": "^4.0.0",
+    "express": "^4.14.0",
+    "http-errors": "^1.5.1",
+    "jsonwebtoken": "^7.2.1",
+    "mongoose": "^4.7.7",
+    "morgan": "^1.7.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0",
+    "nodemon": "^1.11.0",
+    "superagent": "^3.3.2"
+  }
+}
