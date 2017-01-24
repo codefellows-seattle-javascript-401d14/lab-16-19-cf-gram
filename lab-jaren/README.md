@@ -6,7 +6,7 @@ Implement API with basic auth using hashing algorithms
 A REST API for users on an HTTP server that users can make a POST request to with appropriate routes and responses.
 #### Modules
 - **server.js** -- starts the server and creates an instance of a router for the users API
-- **user.js** -- item constructor that takes the password field of the request and uses a hashing algorithm to encrypt it for storage in the database to each game, POST requests from the user take input data for:
+- **user.js** -- item constructor that takes the password field of the request and uses a hashing algorithm to encrypt the password for storage in the database. Also generates a token for the user to make requests to the server. POST requests take input data for:
   - username
   - email
   - password
