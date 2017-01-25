@@ -7,6 +7,8 @@ const expect = require('chai').expect;
 const superagent = require('superagent');
 //app modules
 const User = require('../model/user.js');
+const userMock = require('./lib/user-mocks.js');
+const serverControl = require('./lib/server-control.js');
 //start server
 const baseURL = `http://localhost:${process.env.PORT}`;
 const server = require('../server.js');
@@ -14,36 +16,17 @@ const server = require('../server.js');
 
 describe('testing auth-router', function() {
   //starts server if it's not running
-  before(done => {
-    if(!server.isRunning) {
-      server.listen(process.env.PORT, () => {
-        server.isRunning = true;
-        console.log('server up');
-        done();
-      });
-      return;
-    }
-    done();
-  });
+  before(serverControl.startServer);
 
   //stops the server if it's going on a rampage
-  after(done => {
-    if(server.isRunning){
-      server.close(() => {
-        server.isRunning = false;
-        console.log('server down');
-        done();
-      });
-      return;
-    }
-    done();
-  });
-
+  after(serverControl.killServer);
   afterEach((done) => {
     User.remove({})
     .then(() => done())
     .catch(done);
   });
+
+
   describe('testing POST /api/signup', function(){
     it('should return a user', function(done){
       superagent.post(`${baseURL}/api/signup`)
@@ -101,4 +84,30 @@ describe('testing auth-router', function() {
       .catch(done);
     });
   });
+
+  describe('testing GET /api/login', function(){
+    before(userMock.bind(this));
+
+    it('should respond with a token', (done) => {
+      superagent.get(`${baseURL}/api/login`)
+      .auth(this.tempUser.username, 'notslugbytespassword')
+      .then(res => {
+        expect(res.status).to.equal(200);
+        expect(Boolean(res.text)).to.equal(true);
+        done();
+      })
+      .catch(done);
+    });
+  });
+  it('should return a 401, when no authorization is provided', function(done){
+    superagent.get(`${baseURL}/api/login`)
+  .send({ })
+  .then(done)
+  .catch(err => {
+    expect(err.status).to.equal(401);
+    done();
+  })
+  .catch(done);
+  });
+
 });

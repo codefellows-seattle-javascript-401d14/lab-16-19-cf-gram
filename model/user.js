@@ -10,9 +10,9 @@ const debug = require('debug')('cfgram:user');
 const userSchema = mongoose.Schema({
   username: {type: String, required: true, unique: true},
   email: {type: String, required: true, unique: true},
-  password: {type: String, required: true, unique: true},
+  password: {type: String, required: true},
   //findHash is a random string that will id a user used to create a token for the user
-  findHash: {type: String, required: true},
+  findHash: {type: String},
 });
 
 userSchema.methods.generatePasswordHash = function(password) {
