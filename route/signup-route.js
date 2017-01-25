@@ -1,23 +1,30 @@
 'use strict';
 
 const Router = require('express').Router;
-const User = require('../model/user.js');
 const jsonParser = require('body-parser').json();
-const debug = require('debug')('gram:signup-route');
-
+const User = require('../model/user.js');
+const debug = require('debug')('cfgram:auth-router');
+const basicAuthMiddleware = require('../lib/basic-auth-middleware.js');
 const userRouter = module.exports = new Router();
 
-userRouter.post('/api/signup', jsonParser, function(res,req,next){
+userRouter.post('/api/signup', jsonParser, function(req, res, next) {
   debug('POST /api/signup');
-
-  let pwd = req.body.password;
+  let password = req.body.password;
   delete req.body.password;
 
   new User(req.body)
-  .genPWDHash(pwd)
+  .generatePasswordHash(password)
   .then(user => {
-    return user.genToken();
+    return user.generateToken();
   })
+  .then(token => res.send(token))
+  .catch(next);
+});
+
+userRouter.get('/api/login', basicAuthMiddleware,function(req,res,next){
+  debug('GET /api/login');
+
+  req.user.generateToken()
   .then(token => res.send(token))
   .catch(next);
 });

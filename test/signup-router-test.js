@@ -1,35 +1,18 @@
 'use strict';
 
 require('./test-env.js');
-
 const expect = require('chai').expect;
 const superagent = require('superagent');
 const User = require('../model/user.js');
+const userMock = require('./lib/user-mock.js');
+const serverControl = require('./lib/server-control.js');
 const apiURL = `http://localhost:${process.env.PORT}`;
-const server = require('../server.js');
+// const server = require('../server.js');
 
 describe('Testing signup-router', function(){
-  before((done) => {
-    if(!server.isOn){
-      server.listen(process.env.PORT, () => {
-        server.isOn = true;
-        done();
-      });
-      return;
-    }
-    done();
-  });
+  before(serverControl.startServer);
 
-  after((done) => {
-    if(server.isOn){
-      server.close(() => {
-        server.isOn = false;
-        done();
-      });
-      return;
-    }
-    done();
-  });
+  after(serverControl.killServer);
 
   afterEach((done) => {
     User.remove({})
@@ -38,15 +21,15 @@ describe('Testing signup-router', function(){
   });
 
   describe('Testing POST /api/signup', function(){
-
-    it('should return a user and status code 200 for success', (done) => {
+    it('should respond with a user', done => {
       superagent.post(`${apiURL}/api/signup`)
       .send({
-        username: 'fakeuser',
-        email: 'fakeuser@fakeuser.com',
-        password: 'booyah13',
+        username: 'slugbyte',
+        email: 'slugbyte@slugbyte.com',
+        password: '1234',
       })
       .then(res => {
+        console.log('token:', res.text);
         expect(res.status).to.equal(200);
         expect(Boolean(res.text)).to.equal(true);
         done();
@@ -67,31 +50,56 @@ describe('Testing signup-router', function(){
       .catch(done);
     });
 
-
-    it('should output a 409 status code if username is already exists', (done) => {
-      before((done) => {
+    describe('POST username already taken', function() {
+      before(done => {
         superagent.post(`${apiURL}/api/signup`)
         .send({
-          username:'jjicefish',
-          email:'icecrazed3000@lit.com',
-          password:'dacoldestevaFishy',
-        }).save()
-        .then (() => done())
+          username: 'fake',
+          password: 'booyah13',
+          email: 'fake@email.com',
+        })
+        .then(() => done())
         .catch(done);
       });
-      superagent.post(`${apiURL}/api/signup`)
-      .send({
-        username:'jjicefish',
-        email:'icecrazed3000@lit.com',
-        password:'dacoldestevaFishy',
-      })
-      .then(done)
-      .catch(err => {
-        expect(err.status).to.equal(409);
+      it('should respond with 409 status', done => {
+        superagent.post(`${apiURL}/api/signup`)
+        .send({
+          username: 'fake',
+          password: 'booyah13',
+          email: 'fake@email.com',
+        })
+        .then(done)
+        .catch(err => {
+          console.log('asdasdasdsadasdsadasdsadasd');
+          expect(err.status).to.equal(409);
+          done();
+        })
+        .catch(done);
+      });
+    });
+
+  });
+
+  describe('Testing GET /api/login', function(){
+    before(userMock.bind(this));
+    it('should respond with a user token', (done) => {
+      superagent.get(`${apiURL}/api/login`)
+      .auth(this.tempUser.username, 'fakey454')
+      .then( res => {
+        expect(res.status).to.equal(200);
+        expect(Boolean(res.text)).to.equal(true);
         done();
       })
       .catch(done);
     });
-
+  });
+  it('should respond with a 401 status code', (done) => {
+    superagent.get(`${apiURL}/api/login`)
+    .then(done)
+    .catch(err => {
+      expect(err.status).to.equal(401);
+      done();
+    })
+    .catch(done);
   });
 });

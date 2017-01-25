@@ -6,7 +6,7 @@ const morgan = require('morgan');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const express = require('express');
-const debug = require('debug')('gram:server');
+const debug = require('debug')('cfgram:server');
 
 const app = express();
 
@@ -14,12 +14,14 @@ mongoose.Promise = require('bluebird');
 mongoose.connect(process.env.MONGODB_URI);
 
 app.use(morgan('dev'));
-app.use(cors);
+app.use(cors());
 
 app.use(require('./route/signup-route.js'));
+app.use(require('./route/login-route.js'));
 
 app.use(function(err,req,res,next){
   debug('error middleware');
+  console.log(err.message);
   if(err.status){
     return res.sendStatus(err.status);
   }
@@ -28,7 +30,7 @@ app.use(function(err,req,res,next){
     return res.sendStatus(400);
   }
 
-  if(err.message === 'E11000 duplicate key'){
+  if(err.message.startsWith('E11000 duplicate key')){
     return res.sendStatus(409);
   }
 
