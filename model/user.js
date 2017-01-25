@@ -19,7 +19,8 @@ userSchema.methods.generatePasswordHash = function(password) {
   debug('generatePasswordHash');
   return new Promise((resolve, reject) => {
     bcrypt.hash(password, 11, (err, hash) => {
-      if(err) return reject(createError(400, 'no password supplied'));      this.password = hash;
+      if(err) return reject(createError(400, 'no password supplied'));
+      this.password = hash;
       resolve(this);
     });
   });
