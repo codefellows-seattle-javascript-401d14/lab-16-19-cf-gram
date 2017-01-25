@@ -31,6 +31,7 @@ Before adding user information, you will need three separate terminal windows fo
 - As you make requests to the server, the `morgan.js` module logs each request in this window.
 
 ##### Third window
+First you must add your user profile:
 - To add a new user to the API, type in a POST request, filling the empty quotes with your data:
   - `http POST :4000/api/signup username="" email="" password=""`
   - The server will respond with a `200 OK` status and return the new user data.
@@ -41,4 +42,19 @@ Before adding user information, you will need three separate terminal windows fo
   - `http -a username:password GET :4000/api/login`
   - Any failed attempts will result in a `401 Unauthorized`.
   - Upon success, the server will respond with a very long scrambled token. You use this token to make authorized requests to the server while logged in.
-- Here would go the section of making POST, GET, DELETE requests with the `/api/gallery` endpoint, but I couldn't figure out how to use jwt tokens in HTTPie. The docs only have an option for installing using Python.
+Now you can add the name of the gallery that will hold your photos:
+- To add a new gallery, type in a POST request including the token received during login:
+  - `http --auth-type=jwt --auth='*your token*:' POST :4000/api/gallery title=""`, don't forget the `:` after your token
+  - `200 OK` -- responds with the new gallery data
+  - `400 Bad Request` -- didn't provide a title
+  - `401 Unauthorized` -- bad token or no token provided
+- To retrieve an existing gallery, make a GET request with the gallery's unique ID:
+  - `http --auth-type=jwt --auth='*your token*:' GET :4000/api/gallery/*id here*`
+  - `200 OK` -- responds with the gallery data
+  - `404 Not Found` -- didn't provide a valid ID
+  - `401 Unauthorized` -- bad token or no token provided
+- To delete a gallery, make a DELETE request with the gallery's unique ID:
+- `http --auth-type=jwt --auth='*your token*:' DELETE :4000/api/gallery/*id here*`
+- `204 No Content` -- the gallery has been successfully removed
+- `404 Not Found` -- didn't provide a valid ID
+- `401 Unauthorized` -- bad token or no token provided
