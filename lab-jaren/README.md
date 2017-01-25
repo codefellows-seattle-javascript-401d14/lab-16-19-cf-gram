@@ -1,16 +1,21 @@
-Lab-16 API Authorization // Signup
+Lab-16 & 17 API Basic and Bearer Authorization
 ===
-Implement API with basic auth using hashing algorithms
+Implement API with basic auth using hashing algorithms and bearer auth using ciphers.
 
 ## Description
 A REST API for users on an HTTP server that users can make a POST request to with appropriate routes and responses.
 #### Modules
 - **server.js** -- starts the server and creates an instance of a router for the users API
-- **user.js** -- item constructor that takes the password field of the request and uses a hashing algorithm to encrypt the password for storage in the database. Also generates a token for the user to make requests to the server. POST requests take input data for:
+- **user.js** -- item constructor that takes the password field of the request and uses a hashing algorithm to encrypt the password for storage in the database. Also generates a token using a cipher algorithm and an APP_SECRET environment variable for the user to make CRUD requests to the server. POST requests take input data for:
   - username
   - email
   - password
-- **auth-router.js** -- creates routes for doing CRUD operation on users
+- **gallery.js** -- constructor for a model that associates with one unique user and will eventually hold many photos. POST requests require input for:
+  - title
+- **auth-router.js** -- creates routes for letting users signup by filling in user data, logging in if they already exist as a user
+- **gallery-router.js** -- creates routes for doing CRUD operations on galleries, for which users only have authorization with the token they get by succesfully logging in
+- **basic-auth-middleware.js** -- implements the user login feature
+- **bearer-auth-middleware.js** -- implements the token authentication for POST, GET, and DELETE routes
 
 ## Usage
 Before adding user information, you will need three separate terminal windows for this simulation.
@@ -32,3 +37,8 @@ Before adding user information, you will need three separate terminal windows fo
   - If you get `400 Bad Request` that means you didn't fill out all the properties.
   - If you get `409 Conflict` you picked a username that already exists.
   - If you get `404 Not Found` you used a bad endpoint.
+- To login as an existing user, type in a GET request with your username and password as follows:
+  - `http -a username:password GET :4000/api/login`
+  - Any failed attempts will result in a `401 Unauthorized`.
+  - Upon success, the server will respond with a very long scrambled token. You use this token to make authorized requests to the server while logged in.
+- Here would go the section of making POST, GET, DELETE requests with the `/api/gallery` endpoint, but I couldn't figure out how to use jwt tokens in HTTPie. The docs only have an option for installing using Python.
