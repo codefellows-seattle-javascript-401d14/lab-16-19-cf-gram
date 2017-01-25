@@ -53,6 +53,7 @@ userSchema.methods.generateFindHash = function(){
         tries--;
         _gennerateFindHash();
       });
+      debug('hellomotogeneratefindhashbrowns');
     };
 
     _gennerateFindHash();
