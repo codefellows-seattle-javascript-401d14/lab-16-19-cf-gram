@@ -1,4 +1,4 @@
-Lab-16 & 17 API Basic and Bearer Authorization
+Lab-16|17|18 API Basic and Bearer Authorization
 ===
 Implement API with basic auth using hashing algorithms and bearer auth using ciphers.
 
@@ -10,7 +10,7 @@ A REST API for users on an HTTP server that users can make a POST request to wit
   - username
   - email
   - password
-- **gallery.js** -- constructor for a model that associates with one unique user and will eventually hold many photos. POST requests require input for:
+- **gallery.js** -- constructor for a model that associates with one unique user and will eventually hold many midi files. POST requests require input for:
   - title
 - **auth-router.js** -- creates routes for letting users signup by filling in user data, logging in if they already exist as a user
 - **gallery-router.js** -- creates routes for doing CRUD operations on galleries, for which users only have authorization with the token they get by succesfully logging in
@@ -42,7 +42,7 @@ First you must add your user profile:
   - `http -a username:password GET :4000/api/login`
   - Any failed attempts will result in a `401 Unauthorized`.
   - Upon success, the server will respond with a very long scrambled token. You use this token to make authorized requests to the server while logged in.
-Now you can add the name of the gallery that will hold your photos:
+Now you can add the name of the gallery that will hold your midi files:
 - To add a new gallery, type in a POST request including the token received during login:
   - `http --auth-type=jwt --auth='*your token*:' POST :4000/api/gallery title=""`, don't forget the `:` after your token
   - `200 OK` -- responds with the new gallery data
