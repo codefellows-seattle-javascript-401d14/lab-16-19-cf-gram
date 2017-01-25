@@ -14,6 +14,7 @@ mongoose.connect(process.env.MONGODB_URI);
 app.use(cors());
 app.use(morgan('dev'));
 app.use(require('./routes/auth_router.js'));
+app.use(require('./routes/gallery_router.js'));
 
 app.use(function(err, req, res, next){
   debug('error middleware');
