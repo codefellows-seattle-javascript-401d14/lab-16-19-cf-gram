@@ -6,40 +6,21 @@ const superagent = require('superagent');
 const User = require('../model/user.js');
 const baseURL = `http://localhost:${process.env.PORT}`;
 const server = require('../server.js');
+const serverControl = require('../lib/servercontrol.js');
 
 describe('testing auth-router', function(){
   //start server if not running
-  before(done => {
-    if(!server.isRunning){
-      server.listen(process.env.PORT, () => {
-        server.isRunning = true;
-        console.log('server up');
-        done();
-      });
-      return;
-    }
-    done();
-  });
+  before(serverControl.startServer);
 });
 
-after(done => {
-  if(server.isRunning){
-    server.close(() => {
-      server.isRunning = false;
-      console.log('server down');
-      done();
-    });
-    return;
-  }
-  done();
-});
+after(serverControl.turnoffServer);
 
-after((done) => {
+afterEach((done) => {
   User.remove({})
    .then(() => done())
    .catch(done);
 });
-
+//*********************POST TESTING**********************************************************
 describe('testing POST /api/signup', function(){
   it('should return a user', function(done){
     superagent.post(`${baseURL}/api/signup`)
