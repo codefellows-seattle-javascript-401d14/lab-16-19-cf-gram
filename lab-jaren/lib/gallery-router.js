@@ -32,3 +32,13 @@ galleryRouter.get('/api/gallery/:id', bearerAuth, function(req, res, next) {
   .then(gallery => res.json(gallery))
   .catch(() => next(createError(404, 'didn\'t find the gallery')));
 });
+
+galleryRouter.delete('/api/gallery/:id', bearerAuth, function(req, res, next) {
+  debug('DELETE /api/gallery/:id');
+  Gallery.findOneAndRemove({
+    userID: req.user._id.toString(),
+    _id: req.params.id,
+  })
+  .then(() => res.status(204).send())
+  .catch(() => next(createError(404, 'didn\'t find the gallery to remove')));
+});

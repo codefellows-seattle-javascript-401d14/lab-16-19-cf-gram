@@ -104,4 +104,41 @@ describe('testing gallery router', function() {
       .catch(done);
     });
   });
+
+  describe('testing DELETE /api/gallery/:id', function() {
+    beforeEach(userMocks.bind(this));
+    beforeEach(galleryMock.bind(this));
+
+    it('should remove the gallery and respond with 204', done => {
+      superagent.delete(`${baseURL}/api/gallery/${this.tempGallery._id.toString()}`)
+      .set('Authorization', `Bearer ${this.tempToken}`)
+      .then(res => {
+        expect(res.status).to.equal(204);
+        done();
+      })
+      .catch(done);
+    });
+
+    it('should respond with a 401', done => {
+      superagent.delete(`${baseURL}/api/gallery/${this.tempGallery._id.toString()}`)
+      .set('Authorization', `Bearer badtoken`)
+      .then(done)
+      .catch(err => {
+        expect(err.status).to.equal(401);
+        done();
+      })
+      .catch(done);
+    });
+
+    it('should respond with a 404', done => {
+      superagent.delete(`${baseURL}/api/gallery/fakeID`)
+      .set('Authorization', `Bearer ${this.tempToken}`)
+      .then(done)
+      .catch(err => {
+        expect(err.status).to.equal(404);
+        done();
+      })
+      .catch(done);
+    });
+  });
 });
