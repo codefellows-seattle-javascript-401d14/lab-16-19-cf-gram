@@ -3,33 +3,17 @@
 require('./mockEnv');
 const expect = require('chai').expect;
 const superagent = require('superagent');
+
 const User = require('../model/User');
+const mockUser = require('./lib/mockUser');
+const controlServ = require('./lib/controlServ');
+
 const baseURL = `http://localhost:${process.env.PORT}`;
 const server = require('../server');
 
 describe('testing auth_router', function() {
-  before((done) => {
-    if(!server.isRunning){
-      server.listen(process.env.PORT, () => {
-        server.isRunning = true;
-        console.log('server up');
-        done();
-      });
-      return;
-    }
-    done();
-  });
-  after((done) => {
-    if(server.isRunning){
-      server.close(() => {
-        server.isRunning = false;
-        console.log('server down');
-        done();
-      });
-      return;
-    }
-    done();
-  });
+  before(controlServ.startServ);
+  after(controlServ.killServ);
   afterEach((done) => {
     User.remove({})
     .then(() => done())
