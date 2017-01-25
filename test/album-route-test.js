@@ -107,7 +107,7 @@ describe('Testing login-router', function(){
     });
 
   });
-  describe.only('testing DELETE /api/gallery/:id', function(){
+  describe('testing DELETE /api/gallery/:id', function(){
     beforeEach(userMock.bind(this));
     beforeEach(albumMock.bind(this));
 

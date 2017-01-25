@@ -16,8 +16,9 @@ mongoose.connect(process.env.MONGODB_URI);
 app.use(morgan('dev'));
 app.use(cors());
 
-app.use(require('./route/signup-route.js'));
-app.use(require('./route/login-route.js'));
+app.use(require('./route/auth-route.js'));
+app.use(require('./route/album-route.js'));
+app.use(require('./route/photo-route.js'));
 
 app.use(function(err,req,res,next){
   debug('error middleware');
