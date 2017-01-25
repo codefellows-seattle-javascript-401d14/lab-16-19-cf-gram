@@ -9,7 +9,6 @@ const mockUser = require('./lib/mockUser');
 const controlServ = require('./lib/controlServ');
 
 const baseURL = `http://localhost:${process.env.PORT}`;
-const server = require('../server');
 
 describe('testing auth_router', function() {
   before(controlServ.startServ);
@@ -28,7 +27,6 @@ describe('testing auth_router', function() {
         pw: 'superfancypassword',
       })
       .then(res => {
-        // console.log('token: ', res.text);
         expect(res.status).to.equal(200);
         expect(Boolean(res.text)).to.equal(true);
         done();
@@ -44,6 +42,21 @@ describe('testing auth_router', function() {
         done();
       })
      .catch(done);
+    });
+  });
+
+  describe('testing GET /api/login', function() {
+    before(mockUser.bind(this));
+
+    it('should respond with a token', (done) => {
+      superagent.get(`${baseURL}/api/login`)
+      .auth(this.tempUser.userName, 'superfancypassword')
+      .then(res => {
+        expect(res.status).to.equal(200);
+        expect(Boolean(res.text)).to.equal(true);
+        done();
+      })
+      .catch(done);
     });
   });
 });
