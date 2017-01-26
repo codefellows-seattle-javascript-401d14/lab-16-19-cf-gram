@@ -8,8 +8,8 @@ const createError = require('http-errors');
 const debug = require('debug')('cf-gram:UserModel');
 
 const UserSchema = mongoose.Schema({
-  userName: {type: String, required: true, unique: true},
-  email: {type: String, required: true, unique: true},
+  userName: {type: String, required: true, unique: true, trim: true},
+  email: {type: String, required: true, unique: true, trim: true},
   pw: {type: String, required: true},
   findHash: {type: String, unique: true},
 });

@@ -15,6 +15,7 @@ app.use(cors());
 app.use(morgan('dev'));
 app.use(require('./routes/auth_router.js'));
 app.use(require('./routes/gallery_router.js'));
+app.use(require('./routes/photo_router.js'));
 
 app.use(function(err, req, res, next){
   debug('error middleware');
