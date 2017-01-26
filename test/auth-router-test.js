@@ -7,6 +7,8 @@ const User = require('../model/user.js');
 const baseURL = `http://localhost:${process.env.PORT}`;
 const server = require('../server.js');
 const serverControl = require('../lib/servercontrol.js');
+const userMocks = require('../test/lib/mockUser.js');
+const debug = require('debug')('cfgram:server');
 
 describe('testing auth-router', function(){
   //start server if not running
@@ -15,7 +17,7 @@ describe('testing auth-router', function(){
 
 after(serverControl.turnoffServer);
 
-afterEach((done) => {
+after((done) => {
   User.remove({})
    .then(() => done())
    .catch(done);
@@ -30,7 +32,6 @@ describe('testing POST /api/signup', function(){
        password: '1234',
      })
      .then(res => {
-       console.log('token: ',res.text);
        expect(res.status).to.equal(200);
        expect(Boolean(res.text)).to.equal(true);
        done();
@@ -67,3 +68,32 @@ describe('testing POST /api/signup', function(){
      .catch(done);
   });
 });
+
+//***********************GET TESTING*****************************************
+describe('testing GET /api/login', function(){
+  before(userMocks.bind(this));
+
+  it('should respond with a token', (done) => {
+    debug('should repond with a token');
+    superagent.get(`${baseURL}/api/login`)
+    .auth(this.tempUser.username, '1234')
+    .then(res => {
+      expect(res.status).to.equal(200);
+      expect(Boolean(res.text)).to.equal(true);
+      done();
+    })
+      .catch(done);
+  });
+});
+it('should respond with a 401 error', (done) => {
+  debug('should repond with a 401 error');
+  superagent.get(`${baseURL}/api/login`)
+  .then(done)
+  .catch(err=> {
+    expect(err.status).to.equal(401);
+    done();
+  })
+    .catch(done);
+});
+
+  

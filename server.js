@@ -17,6 +17,7 @@ app.use(cors());
 app.use(morgan('dev'));
 
 app.use(require('./route/auth-router.js'));
+app.use(require('./route/sodacollection-router.js'));
 
 
 app.use(function(err, req, res, next){

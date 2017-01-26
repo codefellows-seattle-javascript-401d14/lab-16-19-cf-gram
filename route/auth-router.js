@@ -4,11 +4,12 @@ const Router = require('express').Router;
 const jsonParser = require('body-parser').json();
 const User = require('../model/user.js');
 const debug = require('debug')('cfgram:auth-router');
-
+const basicAuth = require('../lib/basic-auth-middleware.js');
 const userRouter = module.exports = new Router();
 
+
+//**********************POST ROUTER************************
 userRouter.post('/api/signup', jsonParser, function(req, res, next){
-  // next(new Error('ITS BROKEN!!!!!!!!!!!!!!!!!!'));
   debug('POST /api/signup');
 
   let password = req.body.password;
@@ -20,4 +21,12 @@ userRouter.post('/api/signup', jsonParser, function(req, res, next){
   })
   .then(token => res.send(token))
   .catch(next);
+});
+//******************GET ROUTER****************************
+userRouter.get('/api/login', basicAuth, function(req, res, next){
+  debug('GET /api/login');
+  req.user.generateToken()
+  .then(token => res.send(token))
+  .catch(next);
+
 });
