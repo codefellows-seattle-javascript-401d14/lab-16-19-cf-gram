@@ -32,7 +32,7 @@ app.use(function(err, req, res, next) {
 });
 
 const server = app.listen(process.env.PORT , () => {
-  console.log('server lit ::', process.env.PORT);
+  console.log('server lit!', process.env.PORT);
 });
 
 server.isRunnig = true;

@@ -5,37 +5,18 @@ require('./mock-env.js');
 const expect = require('chai').expect;
 const superagent = require('superagent');
 const User = require('../model/user.js');
+const userMocks = require('./lib/user-mock.js');
+const serverControl = require('./lib/server-control.js');
 const baseURL = `http://localhost:${process.env.PORT}`;
 const server = require('../server.js');
 
 describe('testing auth-router', function() {
-  before(done => {
-    if(!server.isRunning) {
-      server.listen(process.env.PORT, () => {
-        server.isRunning = true;
-        console.log('server lit');
-        done();
-      });
-      return;
-    }
-    done();
-  });
-  after(done => {
-    if(server.isRunning) {
-      server.close(() => {
-        server.isRunning = false;
-        console.log('server off');
-        done();
-      });
-      return;
-    }
-    done();
-  });
-
+  before(serverControl.startServer);
+  after(serverControl.killServer);
   afterEach((done) => {
     User.remove({})
-    .then(() => done())
-    .catch(done);
+      .then(() => done())
+      .catch(done);
   });
 
   describe('testing POST /api/signup', function() {
@@ -54,6 +35,7 @@ describe('testing auth-router', function() {
       })
       .catch(done);
     });
+
     it('should return a 400 if params are missing', (done) => {
       superagent.post(`${baseURL}/api/signup`)
       .send({
@@ -82,6 +64,7 @@ describe('testing auth-router', function() {
           done();
         });
       });
+
       it('should return a 409 if username is taken', (done) => {
         superagent.post(`${baseURL}/api/signup`)
         .send({
@@ -95,6 +78,31 @@ describe('testing auth-router', function() {
           done();
         })
         .catch(done);
+      });
+    });
+
+    describe('testing GET /api/login', function() {
+      before(userMocks.bind(this));
+
+      it('should respond with a token', (done) => {
+        superagent.get(`${baseURL}/api/login`)
+        .auth(this.tempUser.username, '1234')
+        .then(res => {
+          expect(res.status).to.equal(401);
+          expect(Boolean(res.next)).to.equal(true);
+          done();
+        })
+        .catch(done);
+      });
+
+      it('should return a 401 when not auth header is provided', (done) => {
+        superagent.get(`${baseURL}/api/login`)
+        .send({})
+        .then(done)
+        .catch(err => {
+          expect(err.status).to.equal(401);
+          done();
+        });
       });
     });
   });

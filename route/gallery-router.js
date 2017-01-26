@@ -10,7 +10,7 @@ const bearerAuth = require('../lib/bearer-auth-middleware.js');
 
 const galleryRouter = module.exports = new Router();
 
-galleryRouter.post('/api/gallery', bearerAuth, jsonParser,  function(req, res, next){
+galleryRouter.post('/api/gallery', bearerAuth, jsonParser,  function(req, res, next) {
   debug('POST /api/gallery');
   if(!req.body.title)
     return next(createError(400, 'requires titile'));
@@ -24,7 +24,7 @@ galleryRouter.post('/api/gallery', bearerAuth, jsonParser,  function(req, res, n
   .catch(next);
 });
 
-galleryRouter.get('/api/gallery/:id', bearerAuth, function(req, res, next){
+galleryRouter.get('/api/gallery/:id', bearerAuth, function(req, res, next) {
   debug('GET /api/gallery/:id');
 
   Gallery.findOne({
@@ -32,5 +32,14 @@ galleryRouter.get('/api/gallery/:id', bearerAuth, function(req, res, next){
     _id: req.params.id,
   })
   .then(gallery => res.json(gallery))
-  .catch(err => next(createError(404, 'didnt find the gallery')));
+  .catch(() => next(createError(404, 'didnt find the gallery')));
+});
+
+galleryRouter.delete('/api/gallery/:id', bearerAuth, function(req, res, next) {
+  debug('DELETE /api/gallery/:id');
+  Gallery.findByIdAndRemove(req.params.id)
+  .then(() => {
+    res.status(204).send();
+  })
+  .catch(err => next(createError(404, err.message)));
 });

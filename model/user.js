@@ -18,7 +18,7 @@ const userSchema = mongoose.Schema({
 userSchema.methods.generatePasswordHash = function(password) {
   debug('generatePasswordHash');
   return new Promise((resolve, reject) => {
-    bcrypt.hash(password, 11, (err, hash) => {
+    bcrypt.hash(password, 11, (err, hash) => {  //11 represents the rounds of salt
       if(err) return reject(createError(400, 'no password supplied'));
       this.password = hash;
       resolve(this);
@@ -41,10 +41,10 @@ userSchema.methods.generateFindHash = function() {
   debug('generateFindHash');
   return new Promise((resolve, reject) => {
     let tries = 3;
-
     let _generateFindHash = () => {
       this.findHash = crypto.randomBytes(32).toString('hex');
-      this.save().then(() => resolve(this))
+      this.save()
+      .then(() => resolve(this))
       .catch(err => {
         if (tries < 1)
           return reject(err);
