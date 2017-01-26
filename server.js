@@ -22,6 +22,7 @@ app.use(morgan('dev'));
 //app routes
 app.use(require('./route/auth-router.js'));
 app.use(require('./route/gallery-router.js'));
+app.use(require('./route/photo-router.js'));
 //app error middleware
 app.use(function(err, req, res, next){
   console.log(err.message);
