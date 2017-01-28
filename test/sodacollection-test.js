@@ -10,6 +10,7 @@ const server = require('../server.js');
 const serverControl = require('../lib/servercontrol.js');
 const userMocks = require('../test/lib/mockUser.js');
 const debug = require('debug')('cfgram:server');
+const SodaMock = require('../test/lib/mocksoda.js');
 
 describe('testing auth-router', function(){
   //start server if not running
@@ -48,7 +49,7 @@ describe('testing POST /api/sodacollection', function(){
      })
       .catch(done);
   });
-  it.only('should return a 400 bad request error', function(done){
+  it('should return a 400 bad request error', (done) => {
     superagent.post(`${baseURL}/api/sodacollection`)
     .send({ })
     .set('Authorization', `Bearer ${this.tempToken}`)
@@ -60,5 +61,49 @@ describe('testing POST /api/sodacollection', function(){
     .catch(err => {
       done(err);
     });
+  }); //end of it block
+  it('should return a 401 bad unauthorized/ no header error', (done) => {
+    superagent.post(`${baseURL}/api/sodacollection`)
+    .send({
+      brand: 'Coke',
+      diet: false,
+      taste: 'decent',
+      SodaId: this.tempUser._id.toString(),
+    })
+     .then(done)
+     .catch(err => {
+       expect(err.status).to.equal(401);
+       done();
+     })
+    .catch(err => {
+      done(err);
+    });
   });
+});
+//*********************GET TESTING*********************************************
+describe('testing GET Router', function(){
+  describe('testing api/sodacollection/:id', function(){
+    beforeEach(userMocks.bind(this));
+    beforeEach(SodaMock.bind(this));
+
+    it('should return a collection with valid id', (done) => {
+      superagent.get(`${baseURL}/api/sodacollection/${this.tempUser._id}`)
+      .set('Authorization', `Bearer ${this.tempToken}`)
+      .then(res => {
+        expect(res.status).to.equal(200);
+        done();
+      })
+       .catch(done);
+    });//end of it block
+
+  });
+  it.only('should return a 404 error due to bad request', (done) => {
+    superagent.get(`${baseURL}/api/sodacollection/123345`)
+    .set('Authorization', `Bearer ${this.tempToken}`)
+    .then(res => {
+      expect(res.status).to.equal(404);
+      done();
+    })
+     .catch(done);
+  });//end of it block
 });

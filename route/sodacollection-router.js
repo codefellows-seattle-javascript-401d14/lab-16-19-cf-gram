@@ -24,3 +24,15 @@ sodaRouter.post('/api/sodacollection', bearerAuth, jsonParser, function(req, res
    .then(sodacollection => res.json(sodacollection))
    .catch(next);
 });
+//*********************GET ROUTER*********************************************
+sodaRouter.get('/api/sodacollection/:id', bearerAuth, jsonParser, function(req, res, next){
+  debug('GET /api/sodacollection/:id');
+
+  Soda.findById({
+    SodaId: req.user._id.toString(),
+    _id:    req.params.id,
+  })
+  .then(sodacollection => res.json(sodacollection))
+  .catch(err => next(createError(404, 'did not find the soda collection you were looking for. ')));
+
+});

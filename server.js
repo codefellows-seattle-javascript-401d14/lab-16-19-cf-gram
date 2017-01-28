@@ -11,7 +11,8 @@ const PORT = process.env.PORT || 3000;
 
 const app = express();
 
-mongoose.connect(process.env.MONGODB_URI);
+//mongoose.connect(process.env.MONGODB_URI);
+mongoose.connect('mongodb://localhost/dev');
 mongoose.Promise = require('bluebird');
 app.use(cors());
 app.use(morgan('dev'));
@@ -21,6 +22,7 @@ app.use(require('./route/sodacollection-router.js'));
 
 
 app.use(function(err, req, res, next){
+
   console.log(err);
   if(err.status){
     res.status(err.status).send();
