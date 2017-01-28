@@ -25,10 +25,9 @@ sodaRouter.post('/api/sodacollection', bearerAuth, jsonParser, function(req, res
    .catch(next);
 });
 //*********************GET ROUTER*********************************************
-sodaRouter.get('/api/sodacollection/:id', bearerAuth, jsonParser, function(req, res, next){
+sodaRouter.get('/api/sodacollection/:id', bearerAuth, function(req, res, next){
   debug('GET /api/sodacollection/:id');
-
-  Soda.findById({
+  Soda.findOne({
     SodaId: req.user._id.toString(),
     _id:    req.params.id,
   })
