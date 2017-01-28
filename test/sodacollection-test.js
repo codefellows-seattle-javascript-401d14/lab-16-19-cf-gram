@@ -87,22 +87,28 @@ describe('testing GET Router', function(){
     beforeEach(SodaMock.bind(this));
 
     it('should return a collection with valid id', (done) => {
-      superagent.get(`${baseURL}/api/sodacollection/${this.tempUser._id}`)
+      superagent.get(`${baseURL}/api/sodacollection/${this.tempSoda._id}`)
       .set('Authorization', `Bearer ${this.tempToken}`)
       .then(res => {
         expect(res.status).to.equal(200);
+        expect(res.body.brand).to.equal(this.tempSoda.brand);
+        expect(res.body.diet).to.equal(this.tempSoda.diet);
+        expect(res.body.taste).to.equal(this.tempSoda.taste);
+        expect(res.body.SodaId).to.equal(this.tempUser._id.toString());
         done();
       })
        .catch(done);
     });//end of it block
 
   });
-  it.only('should return a 404 error due to bad request', (done) => {
-    superagent.get(`${baseURL}/api/sodacollection/123345`)
+  it.only('should return a 404 error due to bad request', done => {
+    superagent.get(`${baseURL}/api/sodacollection/12334`)
     .set('Authorization', `Bearer ${this.tempToken}`)
-    .then(res => {
+    .then(done)
+    .catch(res => {
       expect(res.status).to.equal(404);
       done();
+      return;
     })
      .catch(done);
   });//end of it block

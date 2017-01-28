@@ -12,7 +12,7 @@ module.exports = function(done){
     SodaId: this.tempUser._id.toString(),
   }).save()
   .then(soda => {
-    this.sodacollection = soda;
+    this.tempSoda = soda;
     done();
   })
   .catch(done);

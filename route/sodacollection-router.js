@@ -33,6 +33,6 @@ sodaRouter.get('/api/sodacollection/:id', bearerAuth, jsonParser, function(req, 
     _id:    req.params.id,
   })
   .then(sodacollection => res.json(sodacollection))
-  .catch(err => next(createError(404, 'did not find the soda collection you were looking for. ')));
+  .catch(() => next(createError(404, 'did not find the soda collection you were looking for. ')));
 
 });
