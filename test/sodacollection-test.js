@@ -99,17 +99,63 @@ describe('testing GET Router', function(){
       })
        .catch(done);
     });//end of it block
-
+    it('should return a 404 error due to bad request', done => {
+      superagent.get(`${baseURL}/api/sodacollection/12334`)
+      .set('Authorization', `Bearer ${this.tempToken}`)
+      .then(done)
+      .catch(res => {
+        expect(res.status).to.equal(404);
+        done();
+        return;
+      })
+      .catch(done);
+    });//end of it block
+    it('should return a 401 error due no header', done => {
+      superagent.get(`${baseURL}/api/sodacollection/12334`)
+      .set('Authorization', `Bearer ${this.aintmytoken}`)
+      .then(done)
+      .catch(res => {
+        expect(res.status).to.equal(401);
+        done();
+        return;
+      })
+      .catch(done);
+    });//end of it block
   });
-  it.only('should return a 404 error due to bad request', done => {
-    superagent.get(`${baseURL}/api/sodacollection/12334`)
+});
+//*********************DELETE TESTING*********************************************
+describe('testing DELETE router', function(){
+  beforeEach(userMocks.bind(this));
+  beforeEach(SodaMock.bind(this));
+  it('should delete a sodacollection with valid ID', (done) => {
+    superagent.delete(`${baseURL}/api/sodacollection/${this.tempSoda._id.toString()}`)
+    .set('Authorization', `Bearer ${this.tempToken}`)
+    .then(res => {
+      expect(res.status).to.equal(204);
+      done();
+    })
+     .catch(done);
+  });//end of it block
+  it('should return a 401 error due no athorization hearder', done => {
+    superagent.delete(`${baseURL}/api/sodacollection/12334`)
+    .set('Authorization', `Bearer ${this.aintmytoken}`)
+    .then(done)
+    .catch(res => {
+      expect(res.status).to.equal(401);
+      done();
+    })
+    .catch(done);
+  });//end of it block
+  it('should return a 404 error due to bad request', done => {
+    superagent.delete(`${baseURL}/api/sodacollection/12334`)
     .set('Authorization', `Bearer ${this.tempToken}`)
     .then(done)
     .catch(res => {
       expect(res.status).to.equal(404);
       done();
-      return;
     })
-     .catch(done);
-  });//end of it block
-});
+    .catch(done);
+  });
+
+
+}); //end of describe block

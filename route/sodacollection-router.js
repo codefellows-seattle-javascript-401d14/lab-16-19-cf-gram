@@ -33,5 +33,11 @@ sodaRouter.get('/api/sodacollection/:id', bearerAuth, function(req, res, next){
   })
   .then(sodacollection => res.json(sodacollection))
   .catch(() => next(createError(404, 'did not find the soda collection you were looking for. ')));
-
+});
+//*********************DELETE ROUTER*********************************************
+sodaRouter.delete('/api/sodacollection/:id', bearerAuth, function(req, res, next){
+  debug('DELETE /api/sodacollection/:id');
+  Soda.findByIdAndRemove(req.params.id)
+  .then(() => res.status(204).send())
+  .catch(() => next(createError(404, 'DELETION failed! Could not find Id to delete!')));
 });
