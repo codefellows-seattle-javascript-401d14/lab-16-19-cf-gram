@@ -9,12 +9,13 @@
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha",
     "start": "./node_modules/nodemon/bin/nodemon.js server.js",
-    "debug": "DEBUG=cf* npm run test"
+    "debug": "DEBUG=midigram* npm run test"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.8.0",
     "bcrypt": "^1.0.2",
     "bluebird": "^3.4.7",
     "body-parser": "^1.16.0",
@@ -31,6 +32,7 @@
     "nodemon": "^1.11.0"
   },
   "devDependencies": {
+    "aws-sdk-mock": "^1.6.1",
     "chai": "^3.5.0",
     "mocha": "^3.2.0",
     "superagent": "^3.3.2"

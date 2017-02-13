@@ -2,7 +2,7 @@
 
 const Router = require('express').Router;
 const jsonParser = require('body-parser').json();
-const debug = require('debug')('cfgram:auth-router');
+const debug = require('debug')('midigram:auth-router');
 
 const User = require('../model/user.js');
 const basicAuthMiddleware = require('../lib/basic-auth-middleware.js');

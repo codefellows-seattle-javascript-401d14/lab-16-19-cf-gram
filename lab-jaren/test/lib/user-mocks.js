@@ -1,6 +1,6 @@
 'use strict';
 
-const debug = require('debug')('cfgram:user-mocks');
+const debug = require('debug')('midigram:user-mocks');
 const User = require('../../model/user.js');
 
 module.exports = function(done) {

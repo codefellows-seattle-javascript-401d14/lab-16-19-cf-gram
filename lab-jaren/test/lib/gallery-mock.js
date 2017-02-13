@@ -1,6 +1,6 @@
 'use strict';
 
-const debug = require('debug')('cfgram:gallery-mock');
+const debug = require('debug')('midigram:gallery-mock');
 const Gallery = require('../../model/gallery.js');
 
 module.exports = function(done) {

@@ -6,7 +6,7 @@ const cors = require('cors');
 const morgan = require('morgan');
 const express = require('express');
 const mongoose = require('mongoose');
-const debug = require('debug')('cfgram:server');
+const debug = require('debug')('midigram:server');
 
 const app = express();
 
@@ -17,6 +17,7 @@ app.use(cors());
 app.use(morgan('dev'));
 app.use(require('./route/auth-router.js'));
 app.use(require('./route/gallery-router.js'));
+app.use(require('./route/midi-router.js'));
 
 app.use(function(err, req, res, next) {
   debug('error middleware');
@@ -28,6 +29,7 @@ app.use(function(err, req, res, next) {
   if(err.name === 'MongoError' && err.code == '11000')
     return res.status(409).send();
   res.status(500).send();
+  next();
 });
 
 const server = app.listen(process.env.PORT, () => {

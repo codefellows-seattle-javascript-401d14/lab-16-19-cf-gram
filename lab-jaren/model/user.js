@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const createError = require('http-errors');
-const debug = require('debug')('cfgram:user');
+const debug = require('debug')('midigram:user');
 
 const userSchema = mongoose.Schema({
   username: {type: String, required: true, unique: true},

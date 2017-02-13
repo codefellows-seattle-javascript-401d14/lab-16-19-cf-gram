@@ -3,7 +3,7 @@
 const Router = require('express').Router;
 const jsonParser = require('body-parser').json();
 const createError = require('http-errors');
-const debug = require('debug')('cfgram:gallery-router');
+const debug = require('debug')('midigram:gallery-router');
 
 const Gallery = require('../model/gallery.js');
 const bearerAuth = require('../lib/bearer-auth-middleware.js');
@@ -29,6 +29,7 @@ galleryRouter.get('/api/gallery/:id', bearerAuth, function(req, res, next) {
     userID: req.user._id.toString(),
     _id: req.params.id,
   })
+  .populate('midis')
   .then(gallery => res.json(gallery))
   .catch(() => next(createError(404, 'didn\'t find the gallery')));
 });

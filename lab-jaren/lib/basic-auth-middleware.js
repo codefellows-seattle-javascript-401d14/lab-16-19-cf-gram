@@ -1,7 +1,7 @@
 'use strict';
 
 const createError = require('http-errors');
-const debug = require('debug')('cfgram:basic-auth-middleware');
+const debug = require('debug')('midigram:basic-auth-middleware');
 
 const User = require('../model/user.js');
 
