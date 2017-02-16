@@ -7,6 +7,7 @@ module.exports = function(done) {
   debug('mock gallery');
   new Gallery({
     title: 'lulwat' + Math.random(),
+    description: 'cool' + Math.random(),
     userID: this.tempUser._id.toString(),
   }).save()
   .then(gallery => {

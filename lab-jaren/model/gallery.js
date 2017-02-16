@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 
 const gallerySchema = mongoose.Schema({
   title: {type: String, required: true},
+  description: {type: String, required: true},
   userID: {type: mongoose.Schema.Types.ObjectId, required: true},
   midis: [{type: mongoose.Schema.Types.ObjectId, ref: 'midi'}],
 });
