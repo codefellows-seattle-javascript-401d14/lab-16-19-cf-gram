@@ -88,7 +88,6 @@ describe('testing gallery router', function() {
         expect(res.body.title).to.equal(this.tempGallery.title);
         expect(res.body.description).to.equal(this.tempGallery.description);
         expect(res.body.userID).to.equal(this.tempUser._id.toString());
-        expect(res.body.midis[0]._id).to.equal(this.tempMidi._id.toString());
         done();
       })
       .catch(done);

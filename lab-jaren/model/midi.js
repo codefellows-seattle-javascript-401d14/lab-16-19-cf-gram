@@ -3,7 +3,7 @@
 //const del = require('del');
 //const AWS = require('aws-sdk');
 const mongoose = require('mongoose');
-const Gallery = require('./gallery.js');
+//const Gallery = require('./gallery.js');
 
 //const s3 = new AWS.S3();
 
@@ -12,18 +12,18 @@ const midiSchema = mongoose.Schema({
   awsKey: {type: String, required: true},
   midiURI: {type: String, required: true},
   userID: {type: mongoose.Schema.Types.ObjectId, required: true},
-  galleryID: {type: mongoose.Schema.Types.ObjectId, required: true},
+  //galleryID: {type: mongoose.Schema.Types.ObjectId, required: true},
 });
 
-midiSchema.pre('save', function(next) {
-  Gallery.findById(this.galleryID)
-  .then(gallery => {
-    gallery.midis.push(this._id.toString());
-    return gallery.save();
-  })
-  .then(() => next())
-  .catch(next);
-});
+// midiSchema.pre('save', function(next) {
+//   Gallery.findById(this.galleryID)
+//   .then(gallery => {
+//     gallery.midis.push(this._id.toString());
+//     return gallery.save();
+//   })
+//   .then(() => next())
+//   .catch(next);
+// });
 
 // midiSchema.post('save', function(doc, next) {
 //   del([`${__dirname}/../assets/midi/*`]);

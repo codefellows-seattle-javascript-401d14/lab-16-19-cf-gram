@@ -30,14 +30,21 @@ function s3Upload(params) {
   });
 }
 
-midiRouter.post('/api/midis', bearerAuth, upload.single('file'), function(req, res, next) {
-  debug('POST /api/midis');
+midiRouter.post('/api/gallery/:galleryID/midis', bearerAuth, upload.single('file'), function(req, res, next) {
+  debug('POST /api/gallery/:galleryID/midis');
   // check if the gallery exists
   if(!req.file)
     return next(createError(400, 'no file'));
 
-  Gallery.findOne({_id: req.body.galleryID, userID: req.user._id.toString()})
-  .then(() => {
+  let tempGallery, tempMidi;
+  //Gallery.findOne({_id: req.params.galleryID, userID: req.user._id.toString()})
+  Gallery.findById(req.params.galleryID)
+  .catch(err => Promise.reject(createError(404, err.message)))
+  .then(gallery => {
+    return gallery ? Promise.resolve(gallery) : Promise.reject(createError(404, 'no gallery'));
+  })
+  .then(gallery => {
+    tempGallery = gallery;
     // upload the file to s3
     return s3Upload({
       ACL: 'public-read',
@@ -51,38 +58,56 @@ midiRouter.post('/api/midis', bearerAuth, upload.single('file'), function(req, r
     del([`${dataDir}/*`]);
     return new Midi({
       title: req.body.title,
-      galleryID: req.body.galleryID,
+      //galleryID: req.body.galleryID,
       userID: req.user._id.toString(),
       awsKey: s3Data.Key,
       midiURI: s3Data.Location,
     }).save();
   })
-  .then(midi => res.json(midi))
+  .then(midi => {
+    tempMidi = midi;
+    tempGallery.midis.push(midi._id);
+    return tempGallery.save();
+  })
+  .then(() => res.json(tempMidi))
   .catch(err => {
     del([`${dataDir}/*`]);
     next(err);
   });
 });
 
-midiRouter.delete('/api/midis/:id', bearerAuth, function(req, res, next) {
-  debug('DELETE /api/midis');
+midiRouter.delete('/api/gallery/:galleryID/midis/:midiID', bearerAuth, function(req, res, next) {
+  debug('DELETE /api/gallery/:galleryID/midis/:midiID');
+  let tempMidi;
   Midi.findOne({
     userID: req.user._id.toString(),
-    _id: req.params.id,
+    _id: req.params.midiID,
   })
-  .catch(err => Promise.reject(createError(404, err.message)))
   .then(midi => {
     if(midi.userID.toString() !== req.user._id.toString())
       return Promise.reject(createError(401, 'user not authorized to delete'));
 
+    tempMidi = midi;
+    return Gallery.findById(req.params.galleryID);
+  })
+  .catch(err => err.status ? Promise.reject(err) : Promise.reject(createError(404, err.message)))
+  // .then(gallery => {
+  //   return gallery ? Promise.resolve(gallery) : Promise.reject(createError(404, 'no gallery'));
+  // })
+  .then(gallery => {
+    gallery.midis = gallery.midis.filter(id => {
+      if(id !== req.params.midiID) return true;
+    });
+    return gallery.save();
+  })
+  .then(() => {
     return s3.deleteObject({
       Bucket: 'midigram-dev',
-      Key: midi.awsKey,
+      Key: tempMidi.awsKey,
     }).promise();
   })
-  .catch(err => err.status ? Promise.reject(err) : Promise.reject(createError(500, err.message)))
   .then(() => {
-    return Midi.findByIdAndRemove(req.params.id);
+    return Midi.findByIdAndRemove(req.params.midiID);
   })
   .then(() => res.sendStatus(204))
   .catch(next);
