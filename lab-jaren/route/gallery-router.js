@@ -40,6 +40,7 @@ galleryRouter.get('/api/gallery/:id', bearerAuth, function(req, res, next) {
 galleryRouter.get('/api/gallery', bearerAuth, function(req, res, next) {
   debug('GET /api/gallery');
   Gallery.find({userID: req.user._id.toString()})
+  .populate('midis')
   .then(galleries => res.json(galleries))
   .catch(() => next(createError(404, 'didn\'t find any galleries')));
 });
